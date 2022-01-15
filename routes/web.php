@@ -1,7 +1,18 @@
 <?php
 
 /** @var \Laravel\Lumen\Routing\Router $router */
-
+$router->post('getItems', 'MainController@getItems');
+$router->group(['prefix' => 'item'], function () use ($router) {
+  $router->post('add', 'MainController@addItems');
+  $router->get('list', 'MainController@getItems');
+});
+$router->group(['prefix' => 'auth'], function () use ($router) {
+  // Matches "/api/register
+  $router->post('register', 'AuthController@register');
+  $router->post('login', 'AuthController@login');
+  $router->get('refresh', 'AuthController@refresh');
+  $router->get('logout', 'AuthController@logout');
+});
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -14,5 +25,5 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+  return "UP AND RUNNING";
 });
