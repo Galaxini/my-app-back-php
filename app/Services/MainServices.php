@@ -12,37 +12,27 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class MainServices
 {
-    public static function getItems($request)
+    public static function getItems()
     {
       $data = Items::select('*')
       ->get();
-        return response()->json(
-            [
-                'status' => 'success',
-                'data' => $data
-            ], 200);
+      return $data;
     }
-    public static function addItems($request)
+    public static function addItems($values)
     {
       try {
-        $incoming_user_data = $request->only([
-          'title',
-          'description',
-          'user_id',
-          'price',
-      ]);
         Items::create([
-          'title' => $request->input('title'),
-          'description' => $request->input('description'),
-          'user_id' => $request->input('user_id'),
-          'price' => $request->input('price'),
-      ]);
+          'title' => $values['title'],
+          'description' => $values['description'],
+          'user_id' => $values['user_id'],
+          'price' => $values['price'],
+        ]);
         //return successful response
-        return response()->json(['message' => 'CREATED'], 201);
+        return true;
 
     } catch (\Exception $e) {
         //return error message
-        return response()->json(['message' => $e], 409);
+        return false;
     }
     }
   }

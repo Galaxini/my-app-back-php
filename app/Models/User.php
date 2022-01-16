@@ -12,6 +12,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
+    const PASSWORD_SALT = 'Наглый коричневый лисёнок прыгает вокруг ленивой собаки.';
+    const HASH_ALGO = 'md5';  
     use Authenticatable, Authorizable, HasFactory;
 
     /**
@@ -20,7 +22,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'name', 'email'
     ];
 
     /**
@@ -50,5 +52,21 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public static function getHash($password)
+    {
+      return hash(self::HASH_ALGO, $password.self::PASSWORD_SALT);
+    }
+
+    public function getName()
+    {
+      return $this->name;
+    }
+
+    public static function generateToken()
+    {
+      $token = sha1(mt_rand(1, 90000) . 'SALT');
+      return $token;
     }
 }

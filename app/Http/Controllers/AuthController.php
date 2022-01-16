@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Services\AuthServices;
+// use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    const PASSWORD_SALT = 'Наглый коричневый лисёнок прыгает вокруг ленивой собаки.';
+    const HASH_ALGO = 'md5';
+    private $authServices;
+    public function __construct()
+    {
+      $this->authServices = new AuthServices;
+    }
     /**
      * Store a new user.
      *
@@ -16,7 +24,7 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        //validate incoming request 
+        //validate incoming request
         $this->validate($request, [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
@@ -29,36 +37,33 @@ class AuthController extends Controller
             $user->name = $request->input('name');
             $user->email = $request->input('email');
             $plainPassword = $request->input('password');
-            $user->password = app('hash')->make($plainPassword);
-
+            $user->password = User::getHash($plainPassword);
+            $user->token = User::generateToken();
             $user->save();
-
             //return successful response
             return response()->json(['user' => $user, 'message' => 'CREATED'], 201);
 
         } catch (\Exception $e) {
             //return error message
-            return response()->json(['message' => 'User Registration Failed!'], 409);
+            return response()->json(['message' => $e, 'pass' => hash(self::HASH_ALGO, $plainPassword)], 409);
         }
 
     }
 
     public function login(Request $request)
     {
-          //validate incoming request 
+          //validate incoming request
         $this->validate($request, [
             'email' => 'required|string',
             'password' => 'required|string',
         ]);
-
-        $credentials = $request->only(['email', 'password']);
-
-        if (! $token = Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+        $email = $request->input('email');
+        $plainPassword = $request->input('password');
+        $response = $this->authServices->login($email, $plainPassword);
+        if ($response) {
+          return response()->json(['response' => $response], 200);
         }
-
-        return $this->respondWithToken($token);
+        return response()->json(['message' => 'error'], 409);
     }
-
 
 }

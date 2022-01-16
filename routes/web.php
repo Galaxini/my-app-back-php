@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Laravel\Lumen\Routing\Router $router */
-$router->post('getItems', 'MainController@getItems');
+// $router->post('getItems', 'MainController@getItems'); 
 $router->group(['prefix' => 'item'], function () use ($router) {
   $router->post('add', 'MainController@addItems');
   $router->get('list', 'MainController@getItems');

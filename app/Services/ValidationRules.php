@@ -8,8 +8,7 @@ class ValidationRules
         'title' => 'required|string',
         'description' => 'required|string',
         'user_id' => 'required|string',
-        'title' => 'required|string',
-        'price' => 'required|string',
+        'price' => 'required|integer',
         // 'device' => 'required|string'
     ];
 
