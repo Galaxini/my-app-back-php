@@ -3,11 +3,13 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 // $router->post('getItems', 'MainController@getItems'); 
 $router->group(['prefix' => 'item'], function () use ($router) {
-  $router->post('add', 'MainController@addItems');
-  $router->get('list', 'MainController@getItems');
+  $router->post('addItems', 'MainController@addItems');
+  $router->get('getItems', 'MainController@getItems');
+  $router->get('getUsersWithItems', 'MainController@getUsersWithItems');
+  $router->post('editItems', 'MainController@editItems');
+  $router->post('deleteItems', 'MainController@deleteItems');
 });
 $router->group(['prefix' => 'auth'], function () use ($router) {
-  // Matches "/api/register
   $router->post('register', 'AuthController@register');
   $router->post('login', 'AuthController@login');
   $router->get('refresh', 'AuthController@refresh');

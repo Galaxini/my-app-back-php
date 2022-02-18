@@ -30,9 +30,51 @@ class MainServices
         //return successful response
         return true;
 
-    } catch (\Exception $e) {
-        //return error message
-        return false;
+      } catch (\Exception $e) {
+          //return error message
+          return false;
+      }
     }
+    public static function getUsersWithItems($values) {
+      $userId = $values['user_id'];
+      $data = User::select('*')
+      ->leftJoin('items', 'users.id', '=', 'items.user_id')
+      ->where('users.id', $userId)
+      ->get();
+      return $data;
+    }
+    public static function editItems($values) {
+      {
+        try {
+          Items::where('user_id', $values['user_id'])
+          ->where('id', $values['id'])
+          ->update([
+            'title' => $values['title'],
+            'description' => $values['description'],
+            'price' => $values['price'],
+          ]);
+          //return successful response
+          return true;
+  
+        } catch (\Exception $e) {
+            //return error message
+            return false;
+        }
+      }
+    }
+    public static function deleteItems($values) {
+      {
+        try {
+          Items::where('user_id', $values['user_id'])
+          ->where('id', $values['id'])
+          ->delete();
+          //return successful response
+          return true;
+  
+        } catch (\Exception $e) {
+            //return error message
+            return false;
+        }
+      }
     }
   }
