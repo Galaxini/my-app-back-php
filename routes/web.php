@@ -12,8 +12,8 @@ $router->group(['prefix' => 'item'], function () use ($router) {
 $router->group(['prefix' => 'auth'], function () use ($router) {
   $router->post('register', 'AuthController@register');
   $router->post('login', 'AuthController@login');
-  $router->get('refresh', 'AuthController@refresh');
-  $router->get('logout', 'AuthController@logout');
+  // $router->get('refresh', 'AuthController@refresh');
+  // $router->get('logout', 'AuthController@logout');
 });
 /*
 |--------------------------------------------------------------------------
